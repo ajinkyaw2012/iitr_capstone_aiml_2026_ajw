@@ -29,6 +29,15 @@ def clean_shipments(raw, medians=None):
         df = df.drop(columns=['declared_value'])
     # 5. dispatch_time: convert to datetime
     df['dispatch_time'] = pd.to_datetime(df['dispatch_time'], format='%Y-%m-%d %H:%M')
+     # 6. `parcel_weight_kg`: any value above 100 is a scanner-fault sentinel (the network accepts parcels up to 40 kg) — treat it as missing;
+    sentinel_count = (df['parcel_weight_kg'] > 100).sum()
+
+    df.loc[df['parcel_weight_kg'] > 100, 'parcel_weight_kg'] = np.nan
+    # 7. fill missing distance_km, parcel_weight_kg and declared_value_in
 
 
-    print("test")
+
+print("Numpy:", np.__version__)
+print("Pandas:", pd.__version__)
+print("scikit-learn:", sklearn.__version__)
+print("Joblib:", joblib.__version__)
